@@ -17,13 +17,13 @@ class MainSpider(scrapy.Spider):
         whole_page_content = ""
         
         for content in response.css(self.css_selector + "::text"):
-            if content != "":
-                whole_page_content += str(content.get())
+            whole_page_content += str(content.get()) + " "
         
-        yield {
-            'content': whole_page_content,
-            'url': response.url, 
-        }
+        if whole_page_content != "":
+            yield {
+                'content': whole_page_content,
+                'url': response.url, 
+            }
 
         le = LinkExtractor()
         for link in le.extract_links(response):

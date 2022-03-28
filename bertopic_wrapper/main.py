@@ -11,12 +11,12 @@ class BertopicTraining():
         # Create data frame and store as object
         # df = pd.read_csv(out_dir + "/" + out_file + ".csv")
         df = pd.read_json(absolute_in_file_path, lines=True)
-        self.data = df.content
+        self.data = df["content"]
 
         print(self.data)
 
     def trainModel(self):
-        topic_model = BERTopic(language="english", top_n_words=5)
+        topic_model = BERTopic()
         topics = None
         probs = None
 
@@ -83,5 +83,5 @@ class BertopicTraining():
         vhe = topic_model.visualize_heatmap()
         vhe.write_html(path + "heatmap_visual.html")
 
-bt = BertopicTraining("/home/granthopkins/workspace/scrape-n-bert-v3/recursive_spider/learn.g2.com.jl", "/home/granthopkins/workspace/scrape-n-bert-v3/data", "learng2")
+bt = BertopicTraining("/home/granthopkins/workspace/scrape-n-bert-v3-clone/recursive_spider/learn.g2.com.jl", "/home/granthopkins/workspace/scrape-n-bert-v3-clone/data", "learng2")
 bt.trainModel()

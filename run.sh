@@ -4,7 +4,7 @@
 # CURRENT ORDER OF ARGS 
 # -- DOMAIN - CSS_SELECTOR - DEPTH_LIMIT - CLOSERSPIDER_PAGECOUNT
 
-# EXAMPLE OF SCRAPY COMMAND = scrapy crawl main -O quotes.jl -a domain="learn.g2.com" -a css_selector="#hs_cos_wrapper_post_body > p" -s DEPTH_LIMIT=6 -s CLOSESPIDER_PAGECOUNT=200
+# EXAMPLE OF SCRAPY COMMAND = scrapy crawl main -a domain="learn.g2.com" -a css_selector="#hs_cos_wrapper_post_body > p" -s DEPTH_LIMIT=6 -s CLOSESPIDER_PAGECOUNT=200
 
 # Get all CLI inputs from user
 helpFunction() 

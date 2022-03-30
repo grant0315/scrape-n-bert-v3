@@ -83,5 +83,5 @@ class BertopicTraining():
         vhe = topic_model.visualize_heatmap()
         vhe.write_html(path + "heatmap_visual.html")
 
-bt = BertopicTraining("/home/granthopkins/workspace/scrape-n-bert-v3-clone/recursive_spider/learn.g2.com.jl", "/home/granthopkins/workspace/scrape-n-bert-v3-clone/data", "learng2")
+bt = BertopicTraining("/home/granthopkins/workspace/scrape-n-bert-v3-clone/recursive_spider/quotes.toscrape.com.jl", "/home/granthopkins/workspace/scrape-n-bert-v3-clone/data", "quotes")
 bt.trainModel()

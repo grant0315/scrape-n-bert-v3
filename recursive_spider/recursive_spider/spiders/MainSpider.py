@@ -1,17 +1,18 @@
 import scrapy
+from scrapy.spiders import Rule
 from scrapy.linkextractors import LinkExtractor
 
 class MainSpider(scrapy.Spider):
     name = "main"
 
-    def __init__(self, domain, css_selector):
-        self.allowed_domains = [domain]
-        self.start_urls = ["https://" + domain]
+    def __init__(self, url, css_selector):
+        self.allowed_domains = [determine_domain(url)]
+        self.start_urls = ["https://" + url]
         self.css_selector = css_selector
 
         # Print for logging information
         print(f"USING CSS SELECTOR: {css_selector}")
-        print(f"SCRAPING DOMAIN: {domain}")
+        print(f"SCRAPING DOMAIN: {url}")
     
     def parse(self, response):
         whole_page_content = ""
@@ -27,4 +28,24 @@ class MainSpider(scrapy.Spider):
 
         le = LinkExtractor()
         for link in le.extract_links(response):
-            yield scrapy.Request(link.url, callback=self.parse)
+            if does_link_contain_base_url(str(link), self.start_urls[0]) == True:   
+                yield scrapy.Request(link.url, callback=self.parse)
+
+def determine_domain(url):
+    domain = ""
+    
+    for i in url:
+        if i == "/":
+            break
+
+        domain += i
+
+    return domain
+
+def does_link_contain_base_url(in_link, base_url):
+    if base_url in in_link:
+        return True
+    else:
+        return False
+
+print(determine_domain("www.trustradius.com/buyer-blog"))

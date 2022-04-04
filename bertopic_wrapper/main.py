@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas as pd
 from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
@@ -10,7 +11,7 @@ class BertopicTraining():
         
         # Create data frame and store as object
         # df = pd.read_csv(out_dir + "/" + out_file + ".csv")
-        df = pd.read_json(absolute_in_file_path, lines=True)
+        df = pd.read_json(os.path.abspath(absolute_in_file_path), lines=True)
         self.data = df["content"]
 
         print(self.data)
@@ -39,49 +40,63 @@ class BertopicTraining():
         print(topic_model.get_topic_info())
 
     def write_training_data_to_disk(self, topic_model, topicInfo, allTopicInfo, repDoc, topicFrequency):
-        topic_info_dir = os.path.join(self.out_directory_path, self.out_filename + "_TOPIC_INFO" + ".txt")
-        all_topic_info_dir = os.path.join(self.out_directory_path, self.out_filename + "_ALL_TOPIC_INFO" + ".txt")
-        rep_doc_dir = os.path.join(self.out_directory_path, self.out_filename + "_REPERSENTITIVE_DOCS" + ".txt")
-        topic_frequency_dir = os.path.join(self.out_directory_path, self.out_filename + "_TOPIC_FREQUENCY" + ".txt")
-        topic_model_dir = os.path.join(self.out_directory_path, self.out_filename + "_TOPIC_MODEL" + ".bin")
+        try:
+            ml_data_path = self.out_directory_path + "/ml_data"
+            
+            try:
+                os.mkdir(ml_data_path)
+            
+                topic_info_dir = os.path.join(ml_data_path, self.out_filename + "_TOPIC_INFO" + ".txt")
+                all_topic_info_dir = os.path.join(ml_data_path, self.out_filename + "_ALL_TOPIC_INFO" + ".txt")
+                rep_doc_dir = os.path.join(ml_data_path, self.out_filename + "_REPERSENTITIVE_DOCS" + ".txt")
+                topic_frequency_dir = os.path.join(ml_data_path, self.out_filename + "_TOPIC_FREQUENCY" + ".txt")
+                topic_model_dir = os.path.join(ml_data_path, self.out_filename + "_TOPIC_MODEL" + ".bin")
 
-        TIF = open(topic_info_dir, "w")
-        TIF.write(topicInfo.to_string())
-        TIF.close()
+                TIF = open(topic_info_dir, "w")
+                TIF.write(topicInfo.to_string())
+                TIF.close()
 
-        AIF = open(all_topic_info_dir, "w")
-        AIF.write(str(allTopicInfo))
-        AIF.close()
+                AIF = open(all_topic_info_dir, "w")
+                AIF.write(str(allTopicInfo))
+                AIF.close()
 
-        RDF = open(rep_doc_dir, "w")
-        print(repDoc, file=RDF)
-        RDF.close()
+                RDF = open(rep_doc_dir, "w")
+                print(repDoc, file=RDF)
+                RDF.close()
 
-        TFF = open(topic_frequency_dir, "w")
-        TFF.write(topicFrequency.to_string())
-        TFF.close()
+                TFF = open(topic_frequency_dir, "w")
+                TFF.write(topicFrequency.to_string())
+                TFF.close()
 
-        topic_model.save(topic_model_dir)
+                topic_model.save(topic_model_dir)
+        
+            except FileExistsError:
+                print("ml_data folder already exists, writing to previously created folder.")
+
+        except ValueError as e: 
+            print("Error: " + str(e))
+            print("!=== This probably has to do with bertopic not being provided enough data ===!")
 
     def write_visualization_data_to_disk(self, topic_model):
-        path = self.out_directory_path + "/visualizations/"
-
         try:
-            os.mkdir(path)
-        except FileExistsError:
-            print("Visualizations folder already exists, writing to previously created folder.")
+            path = self.out_directory_path + "/visualizations/"
 
-        vt = topic_model.visualize_topics()
-        vt.write_html(path + "topics_visual.html")
+            try:
+                os.mkdir(path)
+            except FileExistsError:
+                print("Visualizations folder already exists, writing to previously created folder.")
 
-        vhi = topic_model.visualize_hierarchy()
-        vhi.write_html(path + "hierarchy_visual.html")
+            vt = topic_model.visualize_topics()
+            vt.write_html(path + "topics_visual.html")
 
-        vb = topic_model.visualize_barchart()
-        vb.write_html(path + "barchart_visual.html")
+            vhi = topic_model.visualize_hierarchy()
+            vhi.write_html(path + "hierarchy_visual.html")
 
-        vhe = topic_model.visualize_heatmap()
-        vhe.write_html(path + "heatmap_visual.html")
+            vb = topic_model.visualize_barchart()
+            vb.write_html(path + "barchart_visual.html")
 
-bt = BertopicTraining("/home/granthopkins/workspace/scrape-n-bert-v3-clone/recursive_spider/quotes.toscrape.com.jl", "/home/granthopkins/workspace/scrape-n-bert-v3-clone/data", "quotes")
-bt.trainModel()
+            vhe = topic_model.visualize_heatmap()
+            vhe.write_html(path + "heatmap_visual.html")
+        except ValueError as e: 
+            print("Error: " + str(e))
+            print("!=== This probably has to do with bertopic not being provided enough data ===!")

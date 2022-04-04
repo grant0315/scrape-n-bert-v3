@@ -1,0 +1,16 @@
+/home/granthopkins/workspace/scrape-n-bert-v3-clone/test.ini
+/home/granthopkins/workspace/scrape-n-bert-v3-clone/data
+www_trustradius_com_buyer-blog.jl
+www.trustradius.com/buyer-blog
+p
+50
+10
+!==== RUNNING SPIDER ====!
+www.trustradius.com
+USING CSS SELECTOR: p
+SCRAPING DOMAIN: www.trustradius.com/buyer-blog
+/home/granthopkins/workspace/scrape-n-bert-v3-clone/test.ini
+!=== Scraped_data folder already exists ===!
+www_trustradius_com_buyer-blog.jl
+sh run_spider.sh -o www_trustradius_com_buyer-blog.jl -d www.trustradius.com/buyer-blog -c "p" -l 50 -p 10
+www_trustradius_com_buyer-blog.jl

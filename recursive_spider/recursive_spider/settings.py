@@ -12,13 +12,14 @@ BOT_NAME = 'recursive_spider'
 SPIDER_MODULES = ['recursive_spider.spiders']
 NEWSPIDER_MODULE = 'recursive_spider.spiders'
 
+
 SCHEDULER_PRIORITY_QUEUE = 'scrapy.pqueues.DownloaderAwarePriorityQueue'
 
 RETRY_ENABLED = False
 
 DOWNLOAD_TIMEOUT = 2
 
-REDIRECT_ENABLED = False
+REDIRECT_ENABLED = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'

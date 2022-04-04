@@ -17,9 +17,15 @@ helpFunction()
     echo -e "\t-p the total amount of pages scraped before closing the spider"
 }
 
-while getopts "d:c:l:p:h" opt
+createFileName()
+{
+    echo ${domain}
+}
+
+while getopts "o:d:c:l:p:h" opt
 do 
     case "$opt" in
+        o ) output_file_name="$OPTARG" ;;
         d ) domain="$OPTARG" ;;
         c ) css_selector="$OPTARG" ;;
         l ) depth_limit="$OPTARG" ;;
@@ -30,12 +36,13 @@ do
 done
 
 # Print helpFunction in case parameters are empty
-if [ -z "$domain"] || [ -z "$css_selector" ] || [ -z "$depth_limit" ] || [ -z "$closespider_pagecount"]
+if [ -z "$output_file_name" ] || [ -z "$domain" ] || [ -z "$css_selector" ] || [ -z "$depth_limit" ] || [ -z "$closespider_pagecount" ]
 then 
     echo "Some or all of the parameters are empty";
     helpFunction
 else
     # Print entered options
+    echo "$output_file_name"
     echo "$domain"
     echo "$css_selector"
     echo "$depth_limit"
@@ -45,7 +52,11 @@ else
     echo "!==== RUNNING SPIDER ====!"
     cd recursive_spider # go to spider directory
     # run spider
-    scrapy crawl main -O $domain.jl -a domain="$domain" -a css_selector="$css_selector" -s DEPTH_LIMIT=$depth_limit -s CLOSESPIDER_PAGECOUNT=$closespider_pagecount 
+    scrapy crawl main -O $output_file_name -a url="$domain" -a css_selector="$css_selector" -s DEPTH_LIMIT=$depth_limit -s CLOSESPIDER_PAGECOUNT=$closespider_pagecount 
     cd ../ # return to root directory
+
+    # Then move generated .jl file into scraped_data in output_file_directory
+
+
 fi
 
